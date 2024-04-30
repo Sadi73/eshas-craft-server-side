@@ -26,14 +26,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const collection = client.db("esha-craft").collection("craftItem");
 
     app.get('/all', async (req, res) => {
       const cursor = collection.find();
       const result = await cursor.toArray();
-      
+
       res.send(result)
     });
 
@@ -41,7 +41,7 @@ async function run() {
       const query = { createdBy: req.query.email };
       const cursor = collection.find(query);
       const result = await cursor.toArray();
-      
+
       res.send(result);
     });
 
@@ -51,7 +51,7 @@ async function run() {
       const cursor = collection.find(query);
       const result = await cursor.toArray();
       console.log(result)
-      
+
       res.send(result);
     });
 
@@ -61,6 +61,13 @@ async function run() {
       const result = await collection.insertOne(formData);
       res.send(result)
     });
+
+    app.delete('/delete/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await collection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
