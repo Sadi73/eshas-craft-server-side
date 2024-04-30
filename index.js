@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://esha-craft:lOeiB4BYxxDZQcBv@cluster0.jcb8og7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -43,7 +43,17 @@ async function run() {
       const result = await cursor.toArray();
       
       res.send(result);
-    })
+    });
+
+    app.get('/details/:craftId', async (req, res) => {
+      const id = req.params.craftId;
+      const query = { _id: new ObjectId(id) };
+      const cursor = collection.find(query);
+      const result = await cursor.toArray();
+      console.log(result)
+      
+      res.send(result);
+    });
 
     app.post('/add', async (req, res) => {
       const formData = req.body;
