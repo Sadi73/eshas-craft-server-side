@@ -62,12 +62,34 @@ async function run() {
       res.send(result)
     });
 
+    app.put('/update/:id', async (req, res) => {
+      const id = req.params.id
+      const formData = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name:formData.name,
+          description:formData.description,
+          category:formData.category,
+          price:formData.price,
+          imageURL:formData.imageURL,
+          materialsUsed:formData.materialsUsed,
+          craftingTechnique:formData.craftingTechnique,
+          color:formData.color,
+          availability:formData.availability
+        },
+      };
+      const result = await collection.updateOne(filter, updateDoc, options);
+      res.send(result)
+    });
+
     app.delete('/delete/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await collection.deleteOne(query);
       res.send(result);
-    })
+    });
 
 
 
